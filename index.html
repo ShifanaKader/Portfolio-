@@ -1,0 +1,81 @@
+<html>
+	<body>
+		<textarea id="code" name="code" value="" style="width:50%;height:80%;" ></textarea>
+		<button onclick="getCnt();" >Get count</button>
+		<div id="result" style="font-size:20px;text-align:center;" ></div>
+	</body>
+	<script>
+		function getCnt()
+		{
+			let val = document.getElementById('code').value;
+			const recordArr = val.split("\n");
+			let safeRecordCnt = 0;
+			var errArr = [];
+			for( const num of recordArr )
+			{
+				let str = tempStr = "";	
+				const newNumArr = num.split(" ");
+				for( let i=0; i<newNumArr.length-1; i++ )
+				{
+					const difference = Number(newNumArr[i]) - Number(newNumArr[i+1]);
+					if( difference > 0 && difference >= 1 && difference <= 3 && difference != 0 )
+						tempStr = "decreasing";
+					else if( difference < 0 && difference <= -1 && difference >= -3 && difference != 0 )
+						tempStr = "increasing";
+					else
+						tempStr = "stop";
+					
+					if( !str.length || str == tempStr )
+						str = tempStr;
+					else if( str != tempStr )
+					{
+						str = "";
+						errArr.push(newNumArr);
+						break;
+					}
+				}
+				
+				if( str == "" || str == "stop" )
+					continue;
+				else
+					safeRecordCnt++;
+			}
+			
+			for( const newNumArr of errArr )
+			{
+				let str = tempStr = "";	
+				for( let i=0; i<newNumArr.length; i++ )
+				{
+					const toUseArr = newNumArr.toSpliced(i,1);
+					for( let j=0;j<toUseArr.length-1;j++ )
+					{
+						const difference = Number(toUseArr[j]) - Number(toUseArr[j+1]);
+						if( difference > 0 && difference >= 1 && difference <= 3 && difference != 0 )
+							tempStr = "decreasing";
+						else if( difference < 0 && difference <= -1 && difference >= -3 && difference != 0 )
+							tempStr = "increasing";
+						else
+							tempStr = "stop";
+						
+						if( !str.length || str == tempStr )
+							str = tempStr;
+						else if( str != tempStr )
+						{
+							str = "";
+							break;
+						}
+					}
+					
+					if( str == "" || str == "stop" )
+						continue;
+					else
+					{
+						safeRecordCnt++;
+						break;
+					}
+				}
+			}
+			document.getElementById('result').innerText = "Total Safe Records : " + safeRecordCnt;
+		}
+	</script>
+</html>
